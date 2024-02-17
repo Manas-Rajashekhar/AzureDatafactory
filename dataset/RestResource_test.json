@@ -1,0 +1,27 @@
+{
+	"name": "RestResource_test",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "RestApi",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"ticker": {
+				"type": "string"
+			},
+			"datacategory": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": {
+				"value": "@concat('query?function=',string(dataset().datacategory),'&symbol=',dataset().ticker,'&apikey=09QIJOQMPBIML925')",
+				"type": "Expression"
+			}
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

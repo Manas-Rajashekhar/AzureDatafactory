@@ -1,0 +1,106 @@
+{
+	"name": "child-test-1",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@variables('category')",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Copy data1",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "RestSource",
+									"httpRequestTimeout": "00:01:40",
+									"requestInterval": "00.00:00:00.010",
+									"requestMethod": "GET",
+									"paginationRules": {
+										"supportRFC5988": "true"
+									}
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "RestResource_test",
+									"type": "DatasetReference",
+									"parameters": {
+										"ticker": {
+											"value": "@pipeline().parameters.ticker",
+											"type": "Expression"
+										},
+										"datacategory": {
+											"value": "@{item()}",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "Parquet1_test",
+									"type": "DatasetReference",
+									"parameters": {
+										"ticker": {
+											"value": "@pipeline().parameters.ticker",
+											"type": "Expression"
+										},
+										"datacategory": {
+											"value": "@{item()}",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"ticker": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"category": {
+				"type": "Array",
+				"defaultValue": [
+					"BALANCE_SHEET",
+					"CASH_FLOW",
+					"INCOME_STATEMENT"
+				]
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-02-14T04:48:38Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

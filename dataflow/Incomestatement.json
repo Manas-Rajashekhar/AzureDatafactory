@@ -1,0 +1,88 @@
+{
+	"name": "Incomestatement",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "RestIncomestatement",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "IncomeStatement",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "flatten1"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     symbol as string",
+				"}",
+				"source(output(",
+				"          body as (annualReports as (comprehensiveIncomeNetOfTax as long, costOfRevenue as long, costofGoodsAndServicesSold as long, depreciation as long, depreciationAndAmortization as long, ebit as long, ebitda as long, fiscalDateEnding as date, grossProfit as long, incomeBeforeTax as long, incomeTaxExpense as long, interestAndDebtExpense as integer, interestExpense as integer, interestIncome as string, investmentIncomeNet as string, netIncome as long, netIncomeFromContinuingOperations as long, netInterestIncome as integer, nonInterestIncome as string, operatingExpenses as long, operatingIncome as long, otherNonOperatingIncome as integer, reportedCurrency as string, researchAndDevelopment as long, sellingGeneralAndAdministrative as long, totalRevenue as long)[], quarterlyReports as (comprehensiveIncomeNetOfTax as long, costOfRevenue as long, costofGoodsAndServicesSold as long, depreciation as integer, depreciationAndAmortization as integer, ebit as long, ebitda as long, fiscalDateEnding as date, grossProfit as long, incomeBeforeTax as long, incomeTaxExpense as long, interestAndDebtExpense as integer, interestExpense as integer, interestIncome as string, investmentIncomeNet as string, netIncome as long, netIncomeFromContinuingOperations as long, netInterestIncome as integer, nonInterestIncome as string, operatingExpenses as long, operatingIncome as long, otherNonOperatingIncome as string, reportedCurrency as string, researchAndDevelopment as integer, sellingGeneralAndAdministrative as long, totalRevenue as long)[], symbol as string),",
+				"          headers as [string,string]",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     httpMethod: 'GET',",
+				"     timeout: 30,",
+				"     requestInterval: 0,",
+				"     paginationRules: ['supportRFC5988' -> 'true'],",
+				"     responseFormat: ['type' -> 'json', 'documentForm' -> 'documentPerLine']) ~> source1",
+				"source1 foldDown(unroll(body.annualReports, body.annualReports),",
+				"     mapColumn(",
+				"          comprehensiveIncomeNetOfTax = body.annualReports.comprehensiveIncomeNetOfTax,",
+				"          costOfRevenue = body.annualReports.costOfRevenue,",
+				"          costofGoodsAndServicesSold = body.annualReports.costofGoodsAndServicesSold,",
+				"          depreciation = body.annualReports.depreciation,",
+				"          depreciationAndAmortization = body.annualReports.depreciationAndAmortization,",
+				"          ebit = body.annualReports.ebit,",
+				"          ebitda = body.annualReports.ebitda,",
+				"          fiscalDateEnding = body.annualReports.fiscalDateEnding,",
+				"          grossProfit = body.annualReports.grossProfit,",
+				"          incomeBeforeTax = body.annualReports.incomeBeforeTax,",
+				"          incomeTaxExpense = body.annualReports.incomeTaxExpense,",
+				"          interestAndDebtExpense = body.annualReports.interestAndDebtExpense,",
+				"          interestExpense = body.annualReports.interestExpense,",
+				"          interestIncome = body.annualReports.interestIncome,",
+				"          investmentIncomeNet = body.annualReports.investmentIncomeNet,",
+				"          netIncome = body.annualReports.netIncome,",
+				"          netIncomeFromContinuingOperations = body.annualReports.netIncomeFromContinuingOperations,",
+				"          netInterestIncome = body.annualReports.netInterestIncome,",
+				"          nonInterestIncome = body.annualReports.nonInterestIncome,",
+				"          operatingExpenses = body.annualReports.operatingExpenses,",
+				"          operatingIncome = body.annualReports.operatingIncome,",
+				"          otherNonOperatingIncome = body.annualReports.otherNonOperatingIncome,",
+				"          reportedCurrency = body.annualReports.reportedCurrency,",
+				"          researchAndDevelopment = body.annualReports.researchAndDevelopment,",
+				"          sellingGeneralAndAdministrative = body.annualReports.sellingGeneralAndAdministrative,",
+				"          totalRevenue = body.annualReports.totalRevenue,",
+				"          symbol = body.symbol",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten1",
+				"flatten1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     filePattern:(concat($symbol,'.csv')),",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
+		}
+	}
+}

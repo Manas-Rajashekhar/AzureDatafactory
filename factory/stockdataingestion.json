@@ -1,0 +1,9 @@
+{
+	"name": "stockdataingestion",
+	"location": "australiaeast",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "c62cffc8-f7d5-4978-965a-e7ba1aa2681e",
+		"tenantId": "8130d1d3-2caa-42c8-a3a3-65ce4e38c6b3"
+	}
+}

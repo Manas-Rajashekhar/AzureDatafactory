@@ -1,0 +1,91 @@
+{
+	"name": "Cashflow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "RestCashFlow",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "CashFlow",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "flatten1"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     symbol as string",
+				"}",
+				"source(output(",
+				"          body as (annualReports as (capitalExpenditures as long, cashflowFromFinancing as long, cashflowFromInvestment as long, changeInCashAndCashEquivalents as long, changeInExchangeRate as string, changeInInventory as long, changeInOperatingAssets as long, changeInOperatingLiabilities as long, changeInReceivables as long, depreciationDepletionAndAmortization as long, dividendPayout as string, dividendPayoutCommonStock as string, dividendPayoutPreferredStock as string, fiscalDateEnding as date, netIncome as long, operatingCashflow as long, paymentsForOperatingActivities as string, paymentsForRepurchaseOfCommonStock as string, paymentsForRepurchaseOfEquity as string, paymentsForRepurchaseOfPreferredStock as string, proceedsFromIssuanceOfCommonStock as string, proceedsFromIssuanceOfLongTermDebtAndCapitalSecuritiesNet as string, proceedsFromIssuanceOfPreferredStock as string, proceedsFromOperatingActivities as string, proceedsFromRepaymentsOfShortTermDebt as string, proceedsFromRepurchaseOfEquity as long, proceedsFromSaleOfTreasuryStock as string, profitLoss as long, reportedCurrency as string)[], quarterlyReports as (capitalExpenditures as long, cashflowFromFinancing as long, cashflowFromInvestment as long, changeInCashAndCashEquivalents as string, changeInExchangeRate as string, changeInInventory as long, changeInOperatingAssets as string, changeInOperatingLiabilities as string, changeInReceivables as string, depreciationDepletionAndAmortization as long, dividendPayout as string, dividendPayoutCommonStock as string, dividendPayoutPreferredStock as string, fiscalDateEnding as date, netIncome as long, operatingCashflow as long, paymentsForOperatingActivities as string, paymentsForRepurchaseOfCommonStock as string, paymentsForRepurchaseOfEquity as string, paymentsForRepurchaseOfPreferredStock as string, proceedsFromIssuanceOfCommonStock as string, proceedsFromIssuanceOfLongTermDebtAndCapitalSecuritiesNet as string, proceedsFromIssuanceOfPreferredStock as string, proceedsFromOperatingActivities as string, proceedsFromRepaymentsOfShortTermDebt as string, proceedsFromRepurchaseOfEquity as long, proceedsFromSaleOfTreasuryStock as string, profitLoss as long, reportedCurrency as string)[], symbol as string),",
+				"          headers as [string,string]",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     httpMethod: 'GET',",
+				"     timeout: 30,",
+				"     requestInterval: 0,",
+				"     paginationRules: ['supportRFC5988' -> 'true'],",
+				"     responseFormat: ['type' -> 'json', 'documentForm' -> 'documentPerLine']) ~> source1",
+				"source1 foldDown(unroll(body.annualReports, body.annualReports),",
+				"     mapColumn(",
+				"          capitalExpenditures = body.annualReports.capitalExpenditures,",
+				"          cashflowFromFinancing = body.annualReports.cashflowFromFinancing,",
+				"          cashflowFromInvestment = body.annualReports.cashflowFromInvestment,",
+				"          changeInCashAndCashEquivalents = body.annualReports.changeInCashAndCashEquivalents,",
+				"          changeInExchangeRate = body.annualReports.changeInExchangeRate,",
+				"          changeInInventory = body.annualReports.changeInInventory,",
+				"          changeInOperatingAssets = body.annualReports.changeInOperatingAssets,",
+				"          changeInOperatingLiabilities = body.annualReports.changeInOperatingLiabilities,",
+				"          changeInReceivables = body.annualReports.changeInReceivables,",
+				"          depreciationDepletionAndAmortization = body.annualReports.depreciationDepletionAndAmortization,",
+				"          dividendPayout = body.annualReports.dividendPayout,",
+				"          dividendPayoutCommonStock = body.annualReports.dividendPayoutCommonStock,",
+				"          dividendPayoutPreferredStock = body.annualReports.dividendPayoutPreferredStock,",
+				"          fiscalDateEnding = body.annualReports.fiscalDateEnding,",
+				"          netIncome = body.annualReports.netIncome,",
+				"          operatingCashflow = body.annualReports.operatingCashflow,",
+				"          paymentsForOperatingActivities = body.annualReports.paymentsForOperatingActivities,",
+				"          paymentsForRepurchaseOfCommonStock = body.annualReports.paymentsForRepurchaseOfCommonStock,",
+				"          paymentsForRepurchaseOfEquity = body.annualReports.paymentsForRepurchaseOfEquity,",
+				"          paymentsForRepurchaseOfPreferredStock = body.annualReports.paymentsForRepurchaseOfPreferredStock,",
+				"          proceedsFromIssuanceOfCommonStock = body.annualReports.proceedsFromIssuanceOfCommonStock,",
+				"          proceedsFromIssuanceOfLongTermDebtAndCapitalSecuritiesNet = body.annualReports.proceedsFromIssuanceOfLongTermDebtAndCapitalSecuritiesNet,",
+				"          proceedsFromIssuanceOfPreferredStock = body.annualReports.proceedsFromIssuanceOfPreferredStock,",
+				"          proceedsFromOperatingActivities = body.annualReports.proceedsFromOperatingActivities,",
+				"          proceedsFromRepaymentsOfShortTermDebt = body.annualReports.proceedsFromRepaymentsOfShortTermDebt,",
+				"          proceedsFromRepurchaseOfEquity = body.annualReports.proceedsFromRepurchaseOfEquity,",
+				"          proceedsFromSaleOfTreasuryStock = body.annualReports.proceedsFromSaleOfTreasuryStock,",
+				"          profitLoss = body.annualReports.profitLoss,",
+				"          reportedCurrency = body.annualReports.reportedCurrency,",
+				"          symbol = body.symbol",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten1",
+				"flatten1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     filePattern:(concat($symbol,'.csv')),",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
+		}
+	}
+}

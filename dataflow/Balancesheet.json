@@ -1,0 +1,100 @@
+{
+	"name": "Balancesheet",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "RestBalanceSheet",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Balance_sheet",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "flatten1"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     symbol as string",
+				"}",
+				"source(output(",
+				"          body as (annualReports as (accumulatedDepreciationAmortizationPPE as long, capitalLeaseObligations as string, cashAndCashEquivalentsAtCarryingValue as long, cashAndShortTermInvestments as long, commonStock as long, commonStockSharesOutstanding as long, currentAccountsPayable as long, currentDebt as string, currentLongTermDebt as string, currentNetReceivables as string, deferredRevenue as string, fiscalDateEnding as date, goodwill as string, intangibleAssets as string, intangibleAssetsExcludingGoodwill as string, inventory as long, investments as string, longTermDebt as string, longTermDebtNoncurrent as string, longTermInvestments as string, otherCurrentAssets as long, otherCurrentLiabilities as long, otherNonCurrentAssets as long, otherNonCurrentLiabilities as long, propertyPlantEquipment as long, reportedCurrency as string, retainedEarnings as long, shortLongTermDebtTotal as string, shortTermDebt as string, shortTermInvestments as long, totalAssets as long, totalCurrentAssets as long, totalCurrentLiabilities as long, totalLiabilities as long, totalNonCurrentAssets as long, totalNonCurrentLiabilities as long, totalShareholderEquity as long, treasuryStock as string)[], quarterlyReports as (accumulatedDepreciationAmortizationPPE as string, capitalLeaseObligations as string, cashAndCashEquivalentsAtCarryingValue as long, cashAndShortTermInvestments as long, commonStock as long, commonStockSharesOutstanding as long, currentAccountsPayable as string, currentDebt as string, currentLongTermDebt as string, currentNetReceivables as string, deferredRevenue as string, fiscalDateEnding as date, goodwill as string, intangibleAssets as string, intangibleAssetsExcludingGoodwill as string, inventory as long, investments as string, longTermDebt as string, longTermDebtNoncurrent as string, longTermInvestments as long, otherCurrentAssets as long, otherCurrentLiabilities as long, otherNonCurrentAssets as long, otherNonCurrentLiabilities as long, propertyPlantEquipment as long, reportedCurrency as string, retainedEarnings as long, shortLongTermDebtTotal as string, shortTermDebt as string, shortTermInvestments as long, totalAssets as long, totalCurrentAssets as long, totalCurrentLiabilities as long, totalLiabilities as long, totalNonCurrentAssets as long, totalNonCurrentLiabilities as long, totalShareholderEquity as long, treasuryStock as string)[], symbol as string),",
+				"          headers as [string,string]",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     httpMethod: 'GET',",
+				"     timeout: 30,",
+				"     requestInterval: 0,",
+				"     paginationRules: ['supportRFC5988' -> 'true'],",
+				"     responseFormat: ['type' -> 'json', 'documentForm' -> 'documentPerLine']) ~> source1",
+				"source1 foldDown(unroll(body.annualReports, body.annualReports),",
+				"     mapColumn(",
+				"          accumulatedDepreciationAmortizationPPE = body.annualReports.accumulatedDepreciationAmortizationPPE,",
+				"          capitalLeaseObligations = body.annualReports.capitalLeaseObligations,",
+				"          cashAndCashEquivalentsAtCarryingValue = body.annualReports.cashAndCashEquivalentsAtCarryingValue,",
+				"          cashAndShortTermInvestments = body.annualReports.cashAndShortTermInvestments,",
+				"          commonStock = body.annualReports.commonStock,",
+				"          commonStockSharesOutstanding = body.annualReports.commonStockSharesOutstanding,",
+				"          currentAccountsPayable = body.annualReports.currentAccountsPayable,",
+				"          currentDebt = body.annualReports.currentDebt,",
+				"          currentLongTermDebt = body.annualReports.currentLongTermDebt,",
+				"          currentNetReceivables = body.annualReports.currentNetReceivables,",
+				"          deferredRevenue = body.annualReports.deferredRevenue,",
+				"          fiscalDateEnding = body.annualReports.fiscalDateEnding,",
+				"          goodwill = body.annualReports.goodwill,",
+				"          intangibleAssets = body.annualReports.intangibleAssets,",
+				"          intangibleAssetsExcludingGoodwill = body.annualReports.intangibleAssetsExcludingGoodwill,",
+				"          inventory = body.annualReports.inventory,",
+				"          investments = body.annualReports.investments,",
+				"          longTermDebt = body.annualReports.longTermDebt,",
+				"          longTermDebtNoncurrent = body.annualReports.longTermDebtNoncurrent,",
+				"          longTermInvestments = body.annualReports.longTermInvestments,",
+				"          otherCurrentAssets = body.annualReports.otherCurrentAssets,",
+				"          otherCurrentLiabilities = body.annualReports.otherCurrentLiabilities,",
+				"          otherNonCurrentAssets = body.annualReports.otherNonCurrentAssets,",
+				"          otherNonCurrentLiabilities = body.annualReports.otherNonCurrentLiabilities,",
+				"          propertyPlantEquipment = body.annualReports.propertyPlantEquipment,",
+				"          reportedCurrency = body.annualReports.reportedCurrency,",
+				"          retainedEarnings = body.annualReports.retainedEarnings,",
+				"          shortLongTermDebtTotal = body.annualReports.shortLongTermDebtTotal,",
+				"          shortTermDebt = body.annualReports.shortTermDebt,",
+				"          shortTermInvestments = body.annualReports.shortTermInvestments,",
+				"          totalAssets = body.annualReports.totalAssets,",
+				"          totalCurrentAssets = body.annualReports.totalCurrentAssets,",
+				"          totalCurrentLiabilities = body.annualReports.totalCurrentLiabilities,",
+				"          totalLiabilities = body.annualReports.totalLiabilities,",
+				"          totalNonCurrentAssets = body.annualReports.totalNonCurrentAssets,",
+				"          totalNonCurrentLiabilities = body.annualReports.totalNonCurrentLiabilities,",
+				"          totalShareholderEquity = body.annualReports.totalShareholderEquity,",
+				"          treasuryStock = body.annualReports.treasuryStock,",
+				"          symbol = body.symbol",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten1",
+				"flatten1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     filePattern:(concat($symbol,'.csv')),",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
+		}
+	}
+}
