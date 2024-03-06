@@ -944,7 +944,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@take(activity('Lookup1').output.value ,1)",
+								"value": "@take(activity('Lookup1').output.value , 5)",
 								"type": "Expression"
 							},
 							"isSequential": true,
