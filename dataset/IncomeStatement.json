@@ -19,7 +19,7 @@
 					"value": "@concat(string(dataset().ticker),'.csv')",
 					"type": "Expression"
 				},
-				"folderPath": "incomestatement",
+				"folderPath": "incomestatement/quarterlyreports",
 				"fileSystem": "staging"
 			},
 			"columnDelimiter": ",",

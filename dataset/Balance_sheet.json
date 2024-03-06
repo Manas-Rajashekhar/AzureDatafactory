@@ -15,7 +15,11 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": "balancesheet",
+				"fileName": {
+					"value": "@concat(string(dataset().ticker),'.csv')",
+					"type": "Expression"
+				},
+				"folderPath": "balancesheet/quarterlyreports",
 				"fileSystem": "staging"
 			},
 			"columnDelimiter": ",",

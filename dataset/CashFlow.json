@@ -19,7 +19,7 @@
 					"value": "@concat(string(dataset().ticker),'.csv')",
 					"type": "Expression"
 				},
-				"folderPath": "cashflow",
+				"folderPath": "cashflow/quarterlyreports",
 				"fileSystem": "staging"
 			},
 			"columnDelimiter": ",",
