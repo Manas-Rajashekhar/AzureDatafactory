@@ -21,6 +21,13 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/default')]",
+			"type": "Microsoft.DataFactory/factories/globalparameters",
+			"apiVersion": "2018-06-01",
+			"properties": {},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorage1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -67,7 +74,11 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"folderPath": "balancesheet",
+						"fileName": {
+							"value": "@concat(string(dataset().ticker),'.csv')",
+							"type": "Expression"
+						},
+						"folderPath": "balancesheet/quarterlyreports",
 						"fileSystem": "staging"
 					},
 					"columnDelimiter": ",",
@@ -104,7 +115,7 @@
 							"value": "@concat(string(dataset().ticker),'.csv')",
 							"type": "Expression"
 						},
-						"folderPath": "cashflow",
+						"folderPath": "cashflow/quarterlyreports",
 						"fileSystem": "staging"
 					},
 					"columnDelimiter": ",",
@@ -141,7 +152,7 @@
 							"value": "@concat(string(dataset().ticker),'.csv')",
 							"type": "Expression"
 						},
-						"folderPath": "incomestatement",
+						"folderPath": "incomestatement/quarterlyreports",
 						"fileSystem": "staging"
 					},
 					"columnDelimiter": ",",
@@ -566,7 +577,7 @@
 						"     symbol as string",
 						"}",
 						"source(output(",
-						"          body as (annualReports as (accumulatedDepreciationAmortizationPPE as long, capitalLeaseObligations as string, cashAndCashEquivalentsAtCarryingValue as long, cashAndShortTermInvestments as long, commonStock as long, commonStockSharesOutstanding as long, currentAccountsPayable as long, currentDebt as string, currentLongTermDebt as string, currentNetReceivables as string, deferredRevenue as string, fiscalDateEnding as date, goodwill as string, intangibleAssets as string, intangibleAssetsExcludingGoodwill as string, inventory as long, investments as string, longTermDebt as string, longTermDebtNoncurrent as string, longTermInvestments as string, otherCurrentAssets as long, otherCurrentLiabilities as long, otherNonCurrentAssets as long, otherNonCurrentLiabilities as long, propertyPlantEquipment as long, reportedCurrency as string, retainedEarnings as long, shortLongTermDebtTotal as string, shortTermDebt as string, shortTermInvestments as long, totalAssets as long, totalCurrentAssets as long, totalCurrentLiabilities as long, totalLiabilities as long, totalNonCurrentAssets as long, totalNonCurrentLiabilities as long, totalShareholderEquity as long, treasuryStock as string)[], quarterlyReports as (accumulatedDepreciationAmortizationPPE as string, capitalLeaseObligations as string, cashAndCashEquivalentsAtCarryingValue as long, cashAndShortTermInvestments as long, commonStock as long, commonStockSharesOutstanding as long, currentAccountsPayable as string, currentDebt as string, currentLongTermDebt as string, currentNetReceivables as string, deferredRevenue as string, fiscalDateEnding as date, goodwill as string, intangibleAssets as string, intangibleAssetsExcludingGoodwill as string, inventory as long, investments as string, longTermDebt as string, longTermDebtNoncurrent as string, longTermInvestments as long, otherCurrentAssets as long, otherCurrentLiabilities as long, otherNonCurrentAssets as long, otherNonCurrentLiabilities as long, propertyPlantEquipment as long, reportedCurrency as string, retainedEarnings as long, shortLongTermDebtTotal as string, shortTermDebt as string, shortTermInvestments as long, totalAssets as long, totalCurrentAssets as long, totalCurrentLiabilities as long, totalLiabilities as long, totalNonCurrentAssets as long, totalNonCurrentLiabilities as long, totalShareholderEquity as long, treasuryStock as string)[], symbol as string),",
+						"          body as (annualReports as (accumulatedDepreciationAmortizationPPE as string, capitalLeaseObligations as string, cashAndCashEquivalentsAtCarryingValue as long, cashAndShortTermInvestments as long, commonStock as long, commonStockSharesOutstanding as integer, currentAccountsPayable as long, currentDebt as long, currentLongTermDebt as string, currentNetReceivables as string, deferredRevenue as string, fiscalDateEnding as date, goodwill as long, intangibleAssets as long, intangibleAssetsExcludingGoodwill as long, inventory as long, investments as string, longTermDebt as long, longTermDebtNoncurrent as string, longTermInvestments as string, otherCurrentAssets as long, otherCurrentLiabilities as long, otherNonCurrentAssets as string, otherNonCurrentLiabilities as long, propertyPlantEquipment as long, reportedCurrency as string, retainedEarnings as long, shortLongTermDebtTotal as long, shortTermDebt as long, shortTermInvestments as integer, totalAssets as long, totalCurrentAssets as long, totalCurrentLiabilities as long, totalLiabilities as long, totalNonCurrentAssets as long, totalNonCurrentLiabilities as long, totalShareholderEquity as long, treasuryStock as long)[], quarterlyReports as (accumulatedDepreciationAmortizationPPE as string, capitalLeaseObligations as string, cashAndCashEquivalentsAtCarryingValue as long, cashAndShortTermInvestments as long, commonStock as long, commonStockSharesOutstanding as integer, currentAccountsPayable as long, currentDebt as long, currentLongTermDebt as string, currentNetReceivables as long, deferredRevenue as string, fiscalDateEnding as date, goodwill as long, intangibleAssets as long, intangibleAssetsExcludingGoodwill as long, inventory as long, investments as string, longTermDebt as long, longTermDebtNoncurrent as string, longTermInvestments as string, otherCurrentAssets as long, otherCurrentLiabilities as long, otherNonCurrentAssets as string, otherNonCurrentLiabilities as long, propertyPlantEquipment as long, reportedCurrency as string, retainedEarnings as long, shortLongTermDebtTotal as long, shortTermDebt as long, shortTermInvestments as string, totalAssets as long, totalCurrentAssets as long, totalCurrentLiabilities as long, totalLiabilities as long, totalNonCurrentAssets as long, totalNonCurrentLiabilities as long, totalShareholderEquity as long, treasuryStock as long)[], symbol as string),",
 						"          headers as [string,string]",
 						"     ),",
 						"     allowSchemaDrift: true,",
@@ -576,46 +587,46 @@
 						"     requestInterval: 0,",
 						"     paginationRules: ['supportRFC5988' -> 'true'],",
 						"     responseFormat: ['type' -> 'json', 'documentForm' -> 'documentPerLine']) ~> source1",
-						"source1 foldDown(unroll(body.annualReports, body.annualReports),",
+						"source1 foldDown(unroll(body.quarterlyReports, body.quarterlyReports),",
 						"     mapColumn(",
-						"          accumulatedDepreciationAmortizationPPE = body.annualReports.accumulatedDepreciationAmortizationPPE,",
-						"          capitalLeaseObligations = body.annualReports.capitalLeaseObligations,",
-						"          cashAndCashEquivalentsAtCarryingValue = body.annualReports.cashAndCashEquivalentsAtCarryingValue,",
-						"          cashAndShortTermInvestments = body.annualReports.cashAndShortTermInvestments,",
-						"          commonStock = body.annualReports.commonStock,",
-						"          commonStockSharesOutstanding = body.annualReports.commonStockSharesOutstanding,",
-						"          currentAccountsPayable = body.annualReports.currentAccountsPayable,",
-						"          currentDebt = body.annualReports.currentDebt,",
-						"          currentLongTermDebt = body.annualReports.currentLongTermDebt,",
-						"          currentNetReceivables = body.annualReports.currentNetReceivables,",
-						"          deferredRevenue = body.annualReports.deferredRevenue,",
-						"          fiscalDateEnding = body.annualReports.fiscalDateEnding,",
-						"          goodwill = body.annualReports.goodwill,",
-						"          intangibleAssets = body.annualReports.intangibleAssets,",
-						"          intangibleAssetsExcludingGoodwill = body.annualReports.intangibleAssetsExcludingGoodwill,",
-						"          inventory = body.annualReports.inventory,",
-						"          investments = body.annualReports.investments,",
-						"          longTermDebt = body.annualReports.longTermDebt,",
-						"          longTermDebtNoncurrent = body.annualReports.longTermDebtNoncurrent,",
-						"          longTermInvestments = body.annualReports.longTermInvestments,",
-						"          otherCurrentAssets = body.annualReports.otherCurrentAssets,",
-						"          otherCurrentLiabilities = body.annualReports.otherCurrentLiabilities,",
-						"          otherNonCurrentAssets = body.annualReports.otherNonCurrentAssets,",
-						"          otherNonCurrentLiabilities = body.annualReports.otherNonCurrentLiabilities,",
-						"          propertyPlantEquipment = body.annualReports.propertyPlantEquipment,",
-						"          reportedCurrency = body.annualReports.reportedCurrency,",
-						"          retainedEarnings = body.annualReports.retainedEarnings,",
-						"          shortLongTermDebtTotal = body.annualReports.shortLongTermDebtTotal,",
-						"          shortTermDebt = body.annualReports.shortTermDebt,",
-						"          shortTermInvestments = body.annualReports.shortTermInvestments,",
-						"          totalAssets = body.annualReports.totalAssets,",
-						"          totalCurrentAssets = body.annualReports.totalCurrentAssets,",
-						"          totalCurrentLiabilities = body.annualReports.totalCurrentLiabilities,",
-						"          totalLiabilities = body.annualReports.totalLiabilities,",
-						"          totalNonCurrentAssets = body.annualReports.totalNonCurrentAssets,",
-						"          totalNonCurrentLiabilities = body.annualReports.totalNonCurrentLiabilities,",
-						"          totalShareholderEquity = body.annualReports.totalShareholderEquity,",
-						"          treasuryStock = body.annualReports.treasuryStock,",
+						"          accumulatedDepreciationAmortizationPPE = body.quarterlyReports.accumulatedDepreciationAmortizationPPE,",
+						"          capitalLeaseObligations = body.quarterlyReports.capitalLeaseObligations,",
+						"          cashAndCashEquivalentsAtCarryingValue = body.quarterlyReports.cashAndCashEquivalentsAtCarryingValue,",
+						"          cashAndShortTermInvestments = body.quarterlyReports.cashAndShortTermInvestments,",
+						"          commonStock = body.quarterlyReports.commonStock,",
+						"          commonStockSharesOutstanding = body.quarterlyReports.commonStockSharesOutstanding,",
+						"          currentAccountsPayable = body.quarterlyReports.currentAccountsPayable,",
+						"          currentDebt = body.quarterlyReports.currentDebt,",
+						"          currentLongTermDebt = body.quarterlyReports.currentLongTermDebt,",
+						"          currentNetReceivables = body.quarterlyReports.currentNetReceivables,",
+						"          deferredRevenue = body.quarterlyReports.deferredRevenue,",
+						"          fiscalDateEnding = body.quarterlyReports.fiscalDateEnding,",
+						"          goodwill = body.quarterlyReports.goodwill,",
+						"          intangibleAssets = body.quarterlyReports.intangibleAssets,",
+						"          intangibleAssetsExcludingGoodwill = body.quarterlyReports.intangibleAssetsExcludingGoodwill,",
+						"          inventory = body.quarterlyReports.inventory,",
+						"          investments = body.quarterlyReports.investments,",
+						"          longTermDebt = body.quarterlyReports.longTermDebt,",
+						"          longTermDebtNoncurrent = body.quarterlyReports.longTermDebtNoncurrent,",
+						"          longTermInvestments = body.quarterlyReports.longTermInvestments,",
+						"          otherCurrentAssets = body.quarterlyReports.otherCurrentAssets,",
+						"          otherCurrentLiabilities = body.quarterlyReports.otherCurrentLiabilities,",
+						"          otherNonCurrentAssets = body.quarterlyReports.otherNonCurrentAssets,",
+						"          otherNonCurrentLiabilities = body.quarterlyReports.otherNonCurrentLiabilities,",
+						"          propertyPlantEquipment = body.quarterlyReports.propertyPlantEquipment,",
+						"          reportedCurrency = body.quarterlyReports.reportedCurrency,",
+						"          retainedEarnings = body.quarterlyReports.retainedEarnings,",
+						"          shortLongTermDebtTotal = body.quarterlyReports.shortLongTermDebtTotal,",
+						"          shortTermDebt = body.quarterlyReports.shortTermDebt,",
+						"          shortTermInvestments = body.quarterlyReports.shortTermInvestments,",
+						"          totalAssets = body.quarterlyReports.totalAssets,",
+						"          totalCurrentAssets = body.quarterlyReports.totalCurrentAssets,",
+						"          totalCurrentLiabilities = body.quarterlyReports.totalCurrentLiabilities,",
+						"          totalLiabilities = body.quarterlyReports.totalLiabilities,",
+						"          totalNonCurrentAssets = body.quarterlyReports.totalNonCurrentAssets,",
+						"          totalNonCurrentLiabilities = body.quarterlyReports.totalNonCurrentLiabilities,",
+						"          totalShareholderEquity = body.quarterlyReports.totalShareholderEquity,",
+						"          treasuryStock = body.quarterlyReports.treasuryStock,",
 						"          symbol = body.symbol",
 						"     ),",
 						"     skipDuplicateMapInputs: false,",
@@ -682,37 +693,37 @@
 						"     requestInterval: 0,",
 						"     paginationRules: ['supportRFC5988' -> 'true'],",
 						"     responseFormat: ['type' -> 'json', 'documentForm' -> 'documentPerLine']) ~> source1",
-						"source1 foldDown(unroll(body.annualReports, body.annualReports),",
+						"source1 foldDown(unroll(body.quarterlyReports, body.quarterlyReports),",
 						"     mapColumn(",
-						"          capitalExpenditures = body.annualReports.capitalExpenditures,",
-						"          cashflowFromFinancing = body.annualReports.cashflowFromFinancing,",
-						"          cashflowFromInvestment = body.annualReports.cashflowFromInvestment,",
-						"          changeInCashAndCashEquivalents = body.annualReports.changeInCashAndCashEquivalents,",
-						"          changeInExchangeRate = body.annualReports.changeInExchangeRate,",
-						"          changeInInventory = body.annualReports.changeInInventory,",
-						"          changeInOperatingAssets = body.annualReports.changeInOperatingAssets,",
-						"          changeInOperatingLiabilities = body.annualReports.changeInOperatingLiabilities,",
-						"          changeInReceivables = body.annualReports.changeInReceivables,",
-						"          depreciationDepletionAndAmortization = body.annualReports.depreciationDepletionAndAmortization,",
-						"          dividendPayout = body.annualReports.dividendPayout,",
-						"          dividendPayoutCommonStock = body.annualReports.dividendPayoutCommonStock,",
-						"          dividendPayoutPreferredStock = body.annualReports.dividendPayoutPreferredStock,",
-						"          fiscalDateEnding = body.annualReports.fiscalDateEnding,",
-						"          netIncome = body.annualReports.netIncome,",
-						"          operatingCashflow = body.annualReports.operatingCashflow,",
-						"          paymentsForOperatingActivities = body.annualReports.paymentsForOperatingActivities,",
-						"          paymentsForRepurchaseOfCommonStock = body.annualReports.paymentsForRepurchaseOfCommonStock,",
-						"          paymentsForRepurchaseOfEquity = body.annualReports.paymentsForRepurchaseOfEquity,",
-						"          paymentsForRepurchaseOfPreferredStock = body.annualReports.paymentsForRepurchaseOfPreferredStock,",
-						"          proceedsFromIssuanceOfCommonStock = body.annualReports.proceedsFromIssuanceOfCommonStock,",
-						"          proceedsFromIssuanceOfLongTermDebtAndCapitalSecuritiesNet = body.annualReports.proceedsFromIssuanceOfLongTermDebtAndCapitalSecuritiesNet,",
-						"          proceedsFromIssuanceOfPreferredStock = body.annualReports.proceedsFromIssuanceOfPreferredStock,",
-						"          proceedsFromOperatingActivities = body.annualReports.proceedsFromOperatingActivities,",
-						"          proceedsFromRepaymentsOfShortTermDebt = body.annualReports.proceedsFromRepaymentsOfShortTermDebt,",
-						"          proceedsFromRepurchaseOfEquity = body.annualReports.proceedsFromRepurchaseOfEquity,",
-						"          proceedsFromSaleOfTreasuryStock = body.annualReports.proceedsFromSaleOfTreasuryStock,",
-						"          profitLoss = body.annualReports.profitLoss,",
-						"          reportedCurrency = body.annualReports.reportedCurrency,",
+						"          capitalExpenditures = body.quarterlyReports.capitalExpenditures,",
+						"          cashflowFromFinancing = body.quarterlyReports.cashflowFromFinancing,",
+						"          cashflowFromInvestment = body.quarterlyReports.cashflowFromInvestment,",
+						"          changeInCashAndCashEquivalents = body.quarterlyReports.changeInCashAndCashEquivalents,",
+						"          changeInExchangeRate = body.quarterlyReports.changeInExchangeRate,",
+						"          changeInInventory = body.quarterlyReports.changeInInventory,",
+						"          changeInOperatingAssets = body.quarterlyReports.changeInOperatingAssets,",
+						"          changeInOperatingLiabilities = body.quarterlyReports.changeInOperatingLiabilities,",
+						"          changeInReceivables = body.quarterlyReports.changeInReceivables,",
+						"          depreciationDepletionAndAmortization = body.quarterlyReports.depreciationDepletionAndAmortization,",
+						"          dividendPayout = body.quarterlyReports.dividendPayout,",
+						"          dividendPayoutCommonStock = body.quarterlyReports.dividendPayoutCommonStock,",
+						"          dividendPayoutPreferredStock = body.quarterlyReports.dividendPayoutPreferredStock,",
+						"          fiscalDateEnding = body.quarterlyReports.fiscalDateEnding,",
+						"          netIncome = body.quarterlyReports.netIncome,",
+						"          operatingCashflow = body.quarterlyReports.operatingCashflow,",
+						"          paymentsForOperatingActivities = body.quarterlyReports.paymentsForOperatingActivities,",
+						"          paymentsForRepurchaseOfCommonStock = body.quarterlyReports.paymentsForRepurchaseOfCommonStock,",
+						"          paymentsForRepurchaseOfEquity = body.quarterlyReports.paymentsForRepurchaseOfEquity,",
+						"          paymentsForRepurchaseOfPreferredStock = body.quarterlyReports.paymentsForRepurchaseOfPreferredStock,",
+						"          proceedsFromIssuanceOfCommonStock = body.quarterlyReports.proceedsFromIssuanceOfCommonStock,",
+						"          proceedsFromIssuanceOfLongTermDebtAndCapitalSecuritiesNet = body.quarterlyReports.proceedsFromIssuanceOfLongTermDebtAndCapitalSecuritiesNet,",
+						"          proceedsFromIssuanceOfPreferredStock = body.quarterlyReports.proceedsFromIssuanceOfPreferredStock,",
+						"          proceedsFromOperatingActivities = body.quarterlyReports.proceedsFromOperatingActivities,",
+						"          proceedsFromRepaymentsOfShortTermDebt = body.quarterlyReports.proceedsFromRepaymentsOfShortTermDebt,",
+						"          proceedsFromRepurchaseOfEquity = body.quarterlyReports.proceedsFromRepurchaseOfEquity,",
+						"          proceedsFromSaleOfTreasuryStock = body.quarterlyReports.proceedsFromSaleOfTreasuryStock,",
+						"          profitLoss = body.quarterlyReports.profitLoss,",
+						"          reportedCurrency = body.quarterlyReports.reportedCurrency,",
 						"          symbol = body.symbol",
 						"     ),",
 						"     skipDuplicateMapInputs: false,",
@@ -779,34 +790,34 @@
 						"     requestInterval: 0,",
 						"     paginationRules: ['supportRFC5988' -> 'true'],",
 						"     responseFormat: ['type' -> 'json', 'documentForm' -> 'documentPerLine']) ~> source1",
-						"source1 foldDown(unroll(body.annualReports, body.annualReports),",
+						"source1 foldDown(unroll(body.quarterlyReports, body.quarterlyReports),",
 						"     mapColumn(",
-						"          comprehensiveIncomeNetOfTax = body.annualReports.comprehensiveIncomeNetOfTax,",
-						"          costOfRevenue = body.annualReports.costOfRevenue,",
-						"          costofGoodsAndServicesSold = body.annualReports.costofGoodsAndServicesSold,",
-						"          depreciation = body.annualReports.depreciation,",
-						"          depreciationAndAmortization = body.annualReports.depreciationAndAmortization,",
-						"          ebit = body.annualReports.ebit,",
-						"          ebitda = body.annualReports.ebitda,",
-						"          fiscalDateEnding = body.annualReports.fiscalDateEnding,",
-						"          grossProfit = body.annualReports.grossProfit,",
-						"          incomeBeforeTax = body.annualReports.incomeBeforeTax,",
-						"          incomeTaxExpense = body.annualReports.incomeTaxExpense,",
-						"          interestAndDebtExpense = body.annualReports.interestAndDebtExpense,",
-						"          interestExpense = body.annualReports.interestExpense,",
-						"          interestIncome = body.annualReports.interestIncome,",
-						"          investmentIncomeNet = body.annualReports.investmentIncomeNet,",
-						"          netIncome = body.annualReports.netIncome,",
-						"          netIncomeFromContinuingOperations = body.annualReports.netIncomeFromContinuingOperations,",
-						"          netInterestIncome = body.annualReports.netInterestIncome,",
-						"          nonInterestIncome = body.annualReports.nonInterestIncome,",
-						"          operatingExpenses = body.annualReports.operatingExpenses,",
-						"          operatingIncome = body.annualReports.operatingIncome,",
-						"          otherNonOperatingIncome = body.annualReports.otherNonOperatingIncome,",
-						"          reportedCurrency = body.annualReports.reportedCurrency,",
-						"          researchAndDevelopment = body.annualReports.researchAndDevelopment,",
-						"          sellingGeneralAndAdministrative = body.annualReports.sellingGeneralAndAdministrative,",
-						"          totalRevenue = body.annualReports.totalRevenue,",
+						"          comprehensiveIncomeNetOfTax = body.quarterlyReports.comprehensiveIncomeNetOfTax,",
+						"          costOfRevenue = body.quarterlyReports.costOfRevenue,",
+						"          costofGoodsAndServicesSold = body.quarterlyReports.costofGoodsAndServicesSold,",
+						"          depreciation = body.quarterlyReports.depreciation,",
+						"          depreciationAndAmortization = body.quarterlyReports.depreciationAndAmortization,",
+						"          ebit = body.quarterlyReports.ebit,",
+						"          ebitda = body.quarterlyReports.ebitda,",
+						"          fiscalDateEnding = body.quarterlyReports.fiscalDateEnding,",
+						"          grossProfit = body.quarterlyReports.grossProfit,",
+						"          incomeBeforeTax = body.quarterlyReports.incomeBeforeTax,",
+						"          incomeTaxExpense = body.quarterlyReports.incomeTaxExpense,",
+						"          interestAndDebtExpense = body.quarterlyReports.interestAndDebtExpense,",
+						"          interestExpense = body.quarterlyReports.interestExpense,",
+						"          interestIncome = body.quarterlyReports.interestIncome,",
+						"          investmentIncomeNet = body.quarterlyReports.investmentIncomeNet,",
+						"          netIncome = body.quarterlyReports.netIncome,",
+						"          netIncomeFromContinuingOperations = body.quarterlyReports.netIncomeFromContinuingOperations,",
+						"          netInterestIncome = body.quarterlyReports.netInterestIncome,",
+						"          nonInterestIncome = body.quarterlyReports.nonInterestIncome,",
+						"          operatingExpenses = body.quarterlyReports.operatingExpenses,",
+						"          operatingIncome = body.quarterlyReports.operatingIncome,",
+						"          otherNonOperatingIncome = body.quarterlyReports.otherNonOperatingIncome,",
+						"          reportedCurrency = body.quarterlyReports.reportedCurrency,",
+						"          researchAndDevelopment = body.quarterlyReports.researchAndDevelopment,",
+						"          sellingGeneralAndAdministrative = body.quarterlyReports.sellingGeneralAndAdministrative,",
+						"          totalRevenue = body.quarterlyReports.totalRevenue,",
 						"          symbol = body.symbol",
 						"     ),",
 						"     skipDuplicateMapInputs: false,",
@@ -1102,105 +1113,6 @@
 				"[concat(variables('factoryId'), '/dataflows/Balancesheet')]",
 				"[concat(variables('factoryId'), '/dataflows/Cashflow')]",
 				"[concat(variables('factoryId'), '/dataflows/Incomestatement')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Parent-test-1')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Lookup1",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"dataset": {
-								"referenceName": "SymbolsRefData",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "outer-for-each",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Lookup1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@take(activity('Lookup1').output.value,1)",
-								"type": "Expression"
-							},
-							"isSequential": true,
-							"activities": [
-								{
-									"name": "Execute Pipeline1",
-									"type": "ExecutePipeline",
-									"dependsOn": [],
-									"policy": {
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"pipeline": {
-											"referenceName": "child-test-1",
-											"type": "PipelineReference"
-										},
-										"waitOnCompletion": false,
-										"parameters": {
-											"ticker": {
-												"value": "@item().ticker",
-												"type": "Expression"
-											}
-										}
-									}
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"ticker": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-02-14T07:09:16Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SymbolsRefData')]",
-				"[concat(variables('factoryId'), '/pipelines/child-test-1')]"
 			]
 		}
 	]
