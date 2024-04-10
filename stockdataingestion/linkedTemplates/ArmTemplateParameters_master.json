@@ -5,11 +5,17 @@
 		"factoryName": {
 			"value": "stockdataingestion"
 		},
+		"AzureDatabricks1_accessToken": {
+			"value": ""
+		},
 		"AzureDataLakeStorage1_properties_typeProperties_url": {
 			"value": "https://stockpricesdev.dfs.core.windows.net/"
 		},
 		"RestApi_properties_typeProperties_url": {
 			"value": "https://www.alphavantage.co/"
+		},
+		"AzureDatabricks1_properties_typeProperties_existingClusterId": {
+			"value": "0410-020336-18o69xpg"
 		},
 		"containerUri": {
 			"value": ""
